@@ -30,18 +30,6 @@
     - config
     - service
 
-- name: "Install local python-netaddr package"
-  pip:
-    name: netaddr
-    state: present
-  register: zabbix_python_netaddr_package_installed
-  until: zabbix_python_netaddr_package_installed is succeeded
-  delegate_to: localhost
-  become: "{{ zabbix_agent_become_on_localhost }}"
-  when:
-    - zabbix_install_pip_packages | bool
-    - ansible_all_ipv4_addresses is defined or (zabbix_agent_ip is not defined and total_private_ip_addresses is defined)
-
 - name: "Encrypt with TLS PSK auto management"
   include_tasks: tlspsk_auto.yml
   when:
@@ -64,13 +52,13 @@
   when:
     - zabbix_agent_os_family == "Darwin"
 
-- name: "Installing the Zabbix-api package on localhost"
+- name: "Installing the Zabbix-api package on {{ zabbix_agent_delegate_admin_to }}"
   pip:
     name: zabbix-api
     state: present
   register: zabbix_api_package_installed
   until: zabbix_api_package_installed is succeeded
-  delegate_to: localhost
+  delegate_to: "{{ zabbix_agent_delegate_admin_to }}"
   become: "{{ zabbix_agent_become_on_localhost }}"
   when:
     - zabbix_install_pip_packages | bool
@@ -90,7 +78,7 @@
     - zabbix_api_create_hostgroup | bool
   register: zabbix_api_hostgroup_created
   until: zabbix_api_hostgroup_created is succeeded
-  delegate_to: localhost
+  delegate_to: "{{ zabbix_agent_delegate_admin_to }}"
   become: no
   tags:
     - api
@@ -129,7 +117,7 @@
     - zabbix_api_create_hosts | bool
   register: zabbix_api_host_created
   until: zabbix_api_host_created is succeeded
-  delegate_to: localhost
+  delegate_to: "{{ zabbix_agent_delegate_admin_to }}"
   become: no
   changed_when: false
   tags:

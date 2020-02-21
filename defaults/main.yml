@@ -13,6 +13,8 @@ zabbix_agent_server:
 zabbix_agent_serveractive:
 zabbix_selinux: False
 
+zabbix_agent_delegate_admin_to: localhost
+
 # Zabbix role related vars
 zabbix_install_pip_packages: true
 zabbix_apt_force_apt_get: yes
@@ -24,20 +26,20 @@ zabbix_agent_distribution_release: "{{ ansible_distribution_release }}"
 zabbix_agent_os_family: "{{ ansible_os_family }}"
 
 zabbix_repo_yum:
-  - name: zabbix
+  - name: zabbix_agent
     description: Zabbix Official Repository - $basearch
-    baseurl: http://repo.zabbix.com/zabbix/{{ zabbix_version }}/rhel/{{ zabbix_agent_distribution_major_version }}/$basearch/
+    baseurl: http://repo.zabbix.com/zabbix/{{ zabbix_agent_version }}/rhel/{{ zabbix_agent_distribution_major_version }}/$basearch/
     priority: 1
     gpgcheck: 0
     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-ZABBIX
     state: present
-  - name: zabbix-non-supported
-    description: Zabbix Official Repository non-supported - $basearch
-    baseurl: http://repo.zabbix.com/non-supported/rhel/{{ zabbix_agent_distribution_major_version }}/$basearch/
-    priority: 1
-    gpgcheck: 0
-    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-ZABBIX
-    state: present
+#  - name: zabbix-non-supported
+#    description: Zabbix Official Repository non-supported - $basearch
+#    baseurl: http://repo.zabbix.com/non-supported/rhel/{{ zabbix_agent_distribution_major_version }}/$basearch/
+#    priority: 1
+#    gpgcheck: 0
+#    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-ZABBIX
+#    state: present
 
 # Zabbix API stuff
 zabbix_agent_server_url: "http://zabbix.dj-wasabi.local"
@@ -110,7 +112,7 @@ zabbix_agent_loadmodulepath: ${libdir}/modules
 zabbix_agent_loadmodule:
 zabbix_agent_become_on_localhost: True
 zabbix_agent_description:
-zabbix_agent_inventory_zabbix:
+#zabbix_agent_inventory_zabbix:
 
 # TLS settings
 zabbix_agent_tlsconnect:
@@ -130,10 +132,10 @@ zabbix_agent_tls_config:
   cert: '4'
 
 # IPMI settings
-zabbix_agent_ipmi_authtype:
-zabbix_agent_ipmi_password:
-zabbix_agent_ipmi_privilege:
-zabbix_agent_ipmi_username:
+#zabbix_agent_ipmi_authtype:
+#zabbix_agent_ipmi_password:
+#zabbix_agent_ipmi_privilege:
+#zabbix_agent_ipmi_username:
 
 # Windows/macOS Related
 zabbix_version_long: 4.4.4
